@@ -1,9 +1,9 @@
 package edu.hcmuaf.tourrecommendationservice.model;
 
 import edu.hcmuaf.tourrecommendationservice.database.DatabaseManager;
-import edu.hcmuaf.tourrecommendationservice.dao.LocationDao;
-import edu.hcmuaf.tourrecommendationservice.dao.UserDao;
-import edu.hcmuaf.tourrecommendationservice.entity.RecommendationEntity;
+import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
+import edu.hcmuaf.tourrecommendationservice.service.LocationService;
+import edu.hcmuaf.tourrecommendationservice.service.UserService;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.model.jdbc.MySQLJDBCDataModel;
 import org.apache.mahout.cf.taste.impl.recommender.GenericItemBasedRecommender;
@@ -25,13 +25,13 @@ import java.util.List;
 @Component
 public class Recommendator {
 
-    /** User data access object. */
+    /** User service. */
     @Autowired
-    private UserDao userDao;
+    private UserService userService;
 
-    /** Location data access object. */
+    /** Location service. */
     @Autowired
-    private LocationDao locationDao;
+    private LocationService locationService;
 
     /** Database manager. */
     @Autowired
@@ -41,10 +41,10 @@ public class Recommendator {
      * Recommend location for user.
      *
      * @param userId user id
-     * @return List of {@link RecommendationEntity}
+     * @return List of {@link LocationEntity}
      * @throws TasteException Taste exception
      */
-    public List<RecommendationEntity> recommend(long userId) throws TasteException {
+    public List<LocationEntity> recommend(long userId) throws TasteException {
         // Item base PearsonCorrelation
         JDBCDataModel dataModel1 = new MySQLJDBCDataModel(databaseManager.getDataSource(), "user_rating", "user_id", "location_id", "preference", null);
         ItemSimilarity itemSimilarity1 = new PearsonCorrelationSimilarity(dataModel1);

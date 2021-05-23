@@ -1,6 +1,6 @@
 package edu.hcmuaf.tourrecommendationservice.controller;
 
-import edu.hcmuaf.tourrecommendationservice.entity.RecommendationEntity;
+import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
 import edu.hcmuaf.tourrecommendationservice.model.Recommendator;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class TourRecommendationController {
     private Recommendator recommendator;
 
     @GetMapping("/get-recommendation")
-    public ResponseEntity<List<RecommendationEntity>> getRecommendation(@RequestParam String userId) throws TasteException {
+    public ResponseEntity<List<LocationEntity>> getRecommendation(@RequestParam String userId) throws TasteException {
 
         recommendator.recommend(12345);
         return null;

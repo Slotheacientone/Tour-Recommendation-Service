@@ -9,7 +9,7 @@ import lombok.Data;
  * @author Viet-PH
  */
 @Data
-public class RecommendationEntity {
+public class LocationEntity {
 
     /** location id. */
     @JsonProperty("id")

@@ -1,6 +1,7 @@
 package edu.hcmuaf.tourrecommendationservice.dao;
 
 import edu.hcmuaf.tourrecommendationservice.database.DatabaseManager;
+import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,5 +53,24 @@ public class LocationDao {
         preparedStatement.close();
         databaseManager.closeConnection();
         return name;
+    }
+
+    public LocationEntity selectLocation(long locationId) throws SQLException {
+        LocationEntity locationEntity = null;
+        String sql ="select * from location where location_id=?";
+        PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
+        preparedStatement.setLong(1, locationId);
+        ResultSet rs = preparedStatement.executeQuery();
+        if(rs.next()){
+            locationEntity = new LocationEntity();
+            locationEntity.setLocationId(locationId);
+            locationEntity.setLocationName(rs.getString("location_name"));
+            locationEntity.setLocationLatitude(rs.getDouble("location_latitude"));
+            locationEntity.setLocationLongtitude(rs.getDouble("location_longtitude"));
+        }
+        rs.close();
+        preparedStatement.close();
+        databaseManager.closeConnection();
+        return locationEntity;
     }
 }

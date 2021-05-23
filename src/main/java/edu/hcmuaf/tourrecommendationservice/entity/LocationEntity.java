@@ -2,6 +2,8 @@ package edu.hcmuaf.tourrecommendationservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Recommendation entity.
@@ -9,6 +11,8 @@ import lombok.Data;
  * @author Viet-PH
  */
 @Data
+@Setter
+@Getter
 public class LocationEntity {
 
     /** location id. */

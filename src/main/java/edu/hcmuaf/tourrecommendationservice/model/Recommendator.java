@@ -15,6 +15,8 @@ import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,7 +46,8 @@ public class Recommendator {
      * @return List of {@link LocationEntity}
      * @throws TasteException Taste exception
      */
-    public List<LocationEntity> recommend(long userId) throws TasteException {
+    public List<LocationEntity> recommend(long userId) throws TasteException, SQLException {
+        List<LocationEntity> result = new ArrayList<>();
         // Item base PearsonCorrelation
         JDBCDataModel dataModel1 = new MySQLJDBCDataModel(databaseManager.getDataSource(), "user_rating", "user_id", "location_id", "preference", null);
         ItemSimilarity itemSimilarity1 = new PearsonCorrelationSimilarity(dataModel1);
@@ -52,6 +55,7 @@ public class Recommendator {
         List<RecommendedItem> list = recommender.recommend(userId, 3);
         for(RecommendedItem item: list){
             long locationId = item.getItemID();
+            result.add(locationService.getLocation(locationId));
         }
         return null;
     }

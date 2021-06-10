@@ -15,9 +15,9 @@ import java.sql.SQLException;
  */
 @Component
 public class DatabaseManager {
-    public static final String DB_URL = "jdbc:mysql://localhost:3306/tourism";
+    public static final String DB_URL = "jdbc:mysql://localhost:3306/tour";
     public static final String USER_NAME = "root";
-    public static final String PASSWORD = "Ngay22031999";
+    public static final String PASSWORD = "123qwe";
     private Connection connection;
     private boolean isOpen = false;
 

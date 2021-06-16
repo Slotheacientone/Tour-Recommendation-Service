@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Service
 public class GoogleMapService {
     private static final String BASE_URL = "https://maps.googleapis.com/maps/api/distancematrix/";
-    private static final String API_KEY = "AIzaSyAQHXXiyxRuqGQzI9fStWKGnINS13Iu_Lc";
+    private static final String API_KEY = "<Google Api Key>";
     private DistanceApiInterface distanceApi;
     private int distance;
 

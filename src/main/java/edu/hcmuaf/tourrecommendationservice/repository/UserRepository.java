@@ -1,6 +1,7 @@
 package edu.hcmuaf.tourrecommendationservice.repository;
 
 import edu.hcmuaf.tourrecommendationservice.dao.UserDao;
+import edu.hcmuaf.tourrecommendationservice.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +15,14 @@ public class UserRepository {
 
     public boolean registerUserRating(long userId, long locationId, float rating) throws SQLException {
         return userDao.insertUserRating(userId,locationId,rating);
+    }
+
+    public User findUserByUsername(String username) {
+        return userDao.findUserByUsername(username);
+    }
+
+
+    public void save(User user) throws SQLException {
+        userDao.save(user);
     }
 }

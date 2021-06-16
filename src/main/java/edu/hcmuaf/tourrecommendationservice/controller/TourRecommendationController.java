@@ -35,9 +35,9 @@ public class TourRecommendationController {
     }
 
     @GetMapping("/register-user-rating")
-    public ResponseEntity<String> registerUserRating(@RequestParam long userId, long locationId, float rating) throws SQLException {
+    public ResponseEntity<String> registerUserRating(@RequestParam long userId, @RequestParam long locationId, @RequestParam float locationRating, @RequestParam String comment) throws SQLException {
         boolean success = false;
-        success = userService.registerUserRating(userId,locationId,rating);
+        success = userService.registerUserRating(userId,locationId,locationRating,comment);
         if(success){
             return new ResponseEntity<String>(HttpStatus.OK);
         }else{

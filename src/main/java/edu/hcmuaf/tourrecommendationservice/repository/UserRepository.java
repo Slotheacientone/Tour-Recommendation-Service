@@ -13,8 +13,8 @@ public class UserRepository {
     @Autowired
     private UserDao userDao;
 
-    public boolean registerUserRating(long userId, long locationId, float rating) throws SQLException {
-        return userDao.insertUserRating(userId,locationId,rating);
+    public boolean registerUserRating(long userId, long locationId, float locationRating, String comment) throws SQLException {
+        return userDao.insertUserRating(userId,locationId,locationRating,comment);
     }
 
     public User findUserByUsername(String username) {

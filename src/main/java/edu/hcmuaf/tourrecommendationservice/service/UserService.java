@@ -12,7 +12,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public boolean registerUserRating(long userId, long locationId, float rating) throws SQLException {
-        return userRepository.registerUserRating(userId,locationId,rating);
+    public boolean registerUserRating(long userId, long locationId, float locationRating, String comment) throws SQLException {
+        return userRepository.registerUserRating(userId,locationId,locationRating,comment);
     }
 }

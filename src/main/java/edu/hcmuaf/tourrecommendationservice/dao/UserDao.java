@@ -23,13 +23,14 @@ public class UserDao {
         return selectUserId(userName);
     }
 
-    public boolean insertUserRating(long userId, long locationId, float rating) throws SQLException {
+    public boolean insertUserRating(long userId, long locationId, float locationRating, String comment) throws SQLException {
         int rowAffected = 0;
-        String sql = "insert ignore into user_rating (user_id,location_id,preference) values (?,?,?)";
+        String sql = "insert ignore into user_rating (user_id,location_id,preference,comment) values (?,?,?,?)";
         PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
         preparedStatement.setLong(1, userId);
         preparedStatement.setLong(2, locationId);
-        preparedStatement.setFloat(3, rating);
+        preparedStatement.setFloat(3, locationRating);
+        preparedStatement.setString(4,comment);
         preparedStatement.executeUpdate();
         preparedStatement.close();
         databaseManager.closeConnection();

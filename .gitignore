@@ -31,3 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
+!/Tour-Recommendation-Service.iml

@@ -9,6 +9,7 @@ public class User {
     private String userId;
     private String username;
     private String password;
+    private String thumbnail;
     private Date createAt;
     private boolean active;
 }

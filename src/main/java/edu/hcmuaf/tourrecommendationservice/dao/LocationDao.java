@@ -95,6 +95,7 @@ public class LocationDao {
             commentEntity.setUserImageUrl(rs.getString("user_image"));
             commentEntity.setRating(rs.getFloat("preference"));
             commentEntity.setComment(rs.getString("comment"));
+            commentEntity.setDate(rs.getDate("rating_date"));
             commentEntities.add(commentEntity);
         }
         return commentEntities;

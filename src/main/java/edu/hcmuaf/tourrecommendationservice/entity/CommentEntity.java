@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Data
 @Setter
 @Getter
@@ -19,4 +21,6 @@ public class CommentEntity {
     private float rating;
 
     private String comment;
+
+    private Date date;
 }

@@ -25,7 +25,7 @@ public class UserDao {
 
     public boolean insertUserRating(long userId, long locationId, float locationRating, String comment) throws SQLException {
         int rowAffected = 0;
-        String sql = "insert ignore into user_rating (user_id,location_id,preference,comment) values (?,?,?,?)";
+        String sql = "insert ignore into user_rating (user_id,location_id,preference,comment, date) values (?,?,?,?,sysdate())";
         PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
         preparedStatement.setLong(1, userId);
         preparedStatement.setLong(2, locationId);

@@ -1,6 +1,7 @@
 package edu.hcmuaf.tourrecommendationservice.database;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -15,9 +16,16 @@ import java.sql.SQLException;
  */
 @Component
 public class DatabaseManager {
-    public static final String DB_URL = "jdbc:mysql://localhost:3306/tour?useUnicode=yes&characterEncoding=UTF-8";
-    public static final String USER_NAME = "root";
-    public static final String PASSWORD = "123qwe";
+
+    @Value("${spring.datasource.url}")
+    private String dbURL;
+
+    @Value("${spring.datasource.username}")
+    private String userName;
+
+    @Value("${spring.datasource.password}")
+    private String password;
+
     private Connection connection;
     private boolean isOpen = false;
 
@@ -28,9 +36,9 @@ public class DatabaseManager {
      */
     public DataSource getDataSource(){
         MysqlDataSource dataSource = new MysqlDataSource();
-        dataSource.setURL(DatabaseManager.DB_URL);
-        dataSource.setUser(DatabaseManager.USER_NAME);
-        dataSource.setPassword(DatabaseManager.PASSWORD);
+        dataSource.setURL(dbURL);
+        dataSource.setUser(userName);
+        dataSource.setPassword(password);
         return dataSource;
     }
 
@@ -41,8 +49,9 @@ public class DatabaseManager {
      */
     public Connection openConnection(){
         try{
-            connection = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD);
-        } catch (SQLException throwables) {
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection(dbURL, userName, password);
+        } catch (SQLException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         }
         isOpen = true;

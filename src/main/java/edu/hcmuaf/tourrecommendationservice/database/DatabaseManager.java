@@ -26,6 +26,9 @@ public class DatabaseManager {
     @Value("${spring.datasource.password}")
     private String password;
 
+    @Value("${spring.datasource.driver-class-name}")
+    private String driverClassName;
+
     private Connection connection;
     private boolean isOpen = false;
 
@@ -49,7 +52,7 @@ public class DatabaseManager {
      */
     public Connection openConnection(){
         try{
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName(driverClassName);
             connection = DriverManager.getConnection(dbURL, userName, password);
         } catch (SQLException | ClassNotFoundException throwables) {
             throwables.printStackTrace();

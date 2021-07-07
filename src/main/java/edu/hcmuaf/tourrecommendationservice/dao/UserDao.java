@@ -23,20 +23,6 @@ public class UserDao {
         return selectUserId(userName);
     }
 
-    public boolean insertUserRating(long userId, long locationId, float locationRating, String comment) throws SQLException {
-        int rowAffected = 0;
-        String sql = "insert ignore into user_rating (user_id,location_id,preference,comment, date) values (?,?,?,?,sysdate())";
-        PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
-        preparedStatement.setLong(1, userId);
-        preparedStatement.setLong(2, locationId);
-        preparedStatement.setFloat(3, locationRating);
-        preparedStatement.setString(4, comment);
-        preparedStatement.executeUpdate();
-        preparedStatement.close();
-        databaseManager.closeConnection();
-        return rowAffected > 0;
-    }
-
     public long selectUserId(String userName) throws SQLException {
         long id = 0;
         String sql = "select user_id from user where user_name=?";
@@ -93,7 +79,7 @@ public class UserDao {
     public User findUserByUsername(String username) {
         User user = null;
         try {
-            String sql = "SELECT user_id, user_name, password, active, user_image FROM user WHERE user_name = ?";
+            String sql = "SELECT user_id, user_name, password, active FROM user WHERE user_name = ?";
             PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
             preparedStatement.setString(1, username);
             ResultSet rs = preparedStatement.executeQuery();
@@ -104,7 +90,7 @@ public class UserDao {
                 user.setUsername(rs.getString("user_name"));
                 user.setPassword(rs.getString("password"));
                 user.setActive(rs.getBoolean("active"));
-                user.setThumbnail(rs.getString("user_image"));
+
             }
         } catch (SQLException e) {
             e.printStackTrace();

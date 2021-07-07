@@ -12,7 +12,7 @@ public class LocationEntity {
     private long locationId;
     private String locationName;
     private String locationImageUrl;
-    private Float ratings;
+    private float ratings;
     private int numberOfPeopleRating;
     /**
      * Location latitude.
@@ -23,4 +23,6 @@ public class LocationEntity {
      * Location longtitude.
      */
     private double locationLongtitude;
+
+    private double distance;
 }

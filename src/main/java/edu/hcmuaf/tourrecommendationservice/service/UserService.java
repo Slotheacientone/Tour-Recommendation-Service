@@ -13,14 +13,8 @@ import java.sql.SQLException;
 @Service
 @Transactional
 public class UserService {
-
-
     @Autowired
     private UserRepository userRepository;
-
-    public boolean registerUserRating(long userId, long locationId, float locationRating, String comment) throws SQLException {
-        return userRepository.registerUserRating(userId, locationId, locationRating, comment);
-    }
 
     public UserResponse getInfo(String username) throws SQLException {
         User user = userRepository.findUserByUsername(username);

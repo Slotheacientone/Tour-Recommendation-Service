@@ -19,8 +19,4 @@ public class LocationService {
     public LocationEntity getLocation(long locationId) throws SQLException {
         return locationRepository.getLocation(locationId);
     }
-
-    public List<CommentEntity> getComments(long locationId) throws SQLException {
-        return locationRepository.getComments(locationId);
-    }
 }

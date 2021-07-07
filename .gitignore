@@ -32,3 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 !/Tour-Recommendation-Service.iml
+src/main/resources/application-local.properties
+src/main/resources/application-local.properties
+Tour-Recommendation-Service.iml

@@ -37,10 +37,10 @@ public class TourRecommendationController {
     @GetMapping("/register-user-rating")
     public ResponseEntity<String> registerUserRating(@RequestParam long userId, @RequestParam long locationId, @RequestParam float locationRating, @RequestParam String comment) throws SQLException {
         boolean success = false;
-        success = userService.registerUserRating(userId,locationId,locationRating,comment);
-        if(success){
+        success = userService.registerUserRating(userId, locationId, locationRating, comment);
+        if (success) {
             return new ResponseEntity<String>(HttpStatus.OK);
-        }else{
+        } else {
             return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -49,6 +49,6 @@ public class TourRecommendationController {
     public ResponseEntity<List<CommentEntity>> getComments(@RequestParam long locationId) throws SQLException {
         List<CommentEntity> commentEntities;
         commentEntities = locationService.getComments(locationId);
-        return  new ResponseEntity<List<CommentEntity>>(commentEntities,HttpStatus.OK);
+        return new ResponseEntity<List<CommentEntity>>(commentEntities, HttpStatus.OK);
     }
 }

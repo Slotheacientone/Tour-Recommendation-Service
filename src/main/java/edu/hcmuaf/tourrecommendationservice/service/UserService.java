@@ -22,10 +22,10 @@ public class UserService {
         return userRepository.registerUserRating(userId, locationId, locationRating, comment);
     }
 
-    public UserResponse getInfo(String id) throws SQLException {
-        User user = userRepository.findUserById(id);
+    public UserResponse getInfo(String username) throws SQLException {
+        User user = userRepository.findUserByUsername(username);
         if (user == null)
-            throw new UserNotFoundException("Not found user with ID: " + id);
+            throw new UserNotFoundException("Not found user with username: " + username);
         UserResponse response = new UserResponse();
         response.setId(user.getUserId());
         response.setUsername(user.getUsername());

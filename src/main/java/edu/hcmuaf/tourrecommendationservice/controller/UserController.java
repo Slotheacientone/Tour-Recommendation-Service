@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.sql.SQLException;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/{id}")
-    public UserResponse getInfo(@PathVariable String id) throws SQLException {
-        return userService.getInfo(id);
+    @GetMapping("/{username}")
+    public UserResponse getInfo(@PathVariable String username) throws SQLException {
+        return userService.getInfo(username);
     }
 }

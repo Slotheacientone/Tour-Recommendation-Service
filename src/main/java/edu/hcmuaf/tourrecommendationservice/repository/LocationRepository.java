@@ -19,8 +19,4 @@ public class LocationRepository {
     public LocationEntity getLocation(long locationId) throws SQLException {
         return locationDao.selectLocation(locationId);
     }
-
-    public List<CommentEntity> getComments(long locationId) throws SQLException {
-        return locationDao.selectAllComment(locationId);
-    }
 }

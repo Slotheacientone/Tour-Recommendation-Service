@@ -81,23 +81,4 @@ public class LocationDao {
         databaseManager.closeConnection();
         return locationEntity;
     }
-
-    public List<CommentEntity> selectAllComment(long locationId) throws SQLException {
-        List<CommentEntity> commentEntities = new ArrayList<>();
-        String sql = "select * from user_rating inner join user on user_rating.user_id=user.user_id where location_id=? and comment is not null";
-        PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
-        preparedStatement.setLong(1, locationId);
-        ResultSet rs = preparedStatement.executeQuery();
-        while (rs.next()) {
-            CommentEntity commentEntity = new CommentEntity();
-            commentEntity.setUserId(rs.getLong("user_id"));
-            commentEntity.setUserName(rs.getString("user_name"));
-            commentEntity.setUserImageUrl(rs.getString("user_image"));
-            commentEntity.setRating(rs.getFloat("preference"));
-            commentEntity.setComment(rs.getString("comment"));
-            commentEntity.setDate(rs.getDate("rating_date"));
-            commentEntities.add(commentEntity);
-        }
-        return commentEntities;
-    }
 }

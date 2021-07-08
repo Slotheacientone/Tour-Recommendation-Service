@@ -47,8 +47,8 @@ public class RecommendateService {
      * @return List of {@link RecommendEntity}
      * @throws TasteException Taste exception
      */
-    public List<RecommendEntity> recommend(long userId, int numberOfRecommendation) throws TasteException, SQLException {
-        List<RecommendEntity> result = new ArrayList<>();
+    public List<LocationEntity> recommend(long userId, int numberOfRecommendation) throws TasteException, SQLException {
+        List<LocationEntity> result = new ArrayList<>();
         // Item base PearsonCorrelation
         JDBCDataModel dataModel1 = new MySQLJDBCDataModel(databaseManager.getDataSource(), "user_rating", "user_id", "location_id", "preference", null);
         ItemSimilarity itemSimilarity1 = new PearsonCorrelationSimilarity(dataModel1);
@@ -56,16 +56,8 @@ public class RecommendateService {
         List<RecommendedItem> list = recommender.recommend(userId, 3);
         for(RecommendedItem item: list){
             long locationId = item.getItemID();
-            float rating = item.getValue();
             LocationEntity locationEntity = locationService.getLocation(locationId);
-            RecommendEntity recommendEntity = new RecommendEntity();
-            recommendEntity.setRating(rating);
-            recommendEntity.setUserId(userId);
-            recommendEntity.setLocationId(locationEntity.getLocationId());
-            recommendEntity.setLocationName(locationEntity.getLocationName());
-            recommendEntity.setLocationLatitude(locationEntity.getLocationLatitude());
-            recommendEntity.setLocationLongtitude(locationEntity.getLocationLongtitude());
-            result.add(recommendEntity);
+            result.add(locationEntity);
         }
         return result;
     }

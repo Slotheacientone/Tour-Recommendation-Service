@@ -93,7 +93,7 @@ public class UserDao {
     public User findUserByUsername(String username) {
         User user = null;
         try {
-            String sql = "SELECT user_id, user_name, password, active, user_image FROM user WHERE user_name = ?";
+            String sql = "SELECT user_id, name, user_name, password, active, user_image FROM user WHERE user_name = ?";
             PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
             preparedStatement.setString(1, username);
             ResultSet rs = preparedStatement.executeQuery();
@@ -101,6 +101,7 @@ public class UserDao {
             if (rs.next()) {
                 user = new User();
                 user.setUserId(rs.getString("user_id"));
+                user.setName(rs.getString("name"));
                 user.setUsername(rs.getString("user_name"));
                 user.setPassword(rs.getString("password"));
                 user.setActive(rs.getBoolean("active"));
@@ -113,16 +114,17 @@ public class UserDao {
     }
 
     public void save(User user) throws SQLException {
-        String sql = "INSERT INTO user(user_name, password, createAt, active) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO user(name, user_name, password, createAt, active) VALUES(?,?,?,?,?)";
         PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
-        preparedStatement.setString(1, user.getUsername());
-        preparedStatement.setString(2, user.getPassword());
-        preparedStatement.setDate(3, new Date(user.getCreateAt().getTime()));
-        preparedStatement.setBoolean(4, user.isActive());
+        preparedStatement.setString(1, user.getName());
+        preparedStatement.setString(2, user.getUsername());
+        preparedStatement.setString(3, user.getPassword());
+        preparedStatement.setDate(4, new Date(user.getCreateAt().getTime()));
+        preparedStatement.setBoolean(5, user.isActive());
         preparedStatement.executeUpdate();
     }
 
-    public User findUserById(String id) throws SQLException{
+    public User findUserById(String id) throws SQLException {
         User user = null;
 
         String sql = "SELECT user_id, user_name, user_image FROM user WHERE user_id = ?";

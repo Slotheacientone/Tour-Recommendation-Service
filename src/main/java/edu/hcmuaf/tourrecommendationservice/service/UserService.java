@@ -22,6 +22,7 @@ public class UserService {
             throw new UserNotFoundException("Not found user with username: " + username);
         UserResponse response = new UserResponse();
         response.setId(user.getUserId());
+        response.setUsername(user.getUsername());
         response.setName(user.getName());
         response.setThumbnail(user.getThumbnail());
         return response;

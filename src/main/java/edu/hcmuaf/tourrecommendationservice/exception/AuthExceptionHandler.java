@@ -18,10 +18,10 @@ import org.springframework.web.context.request.WebRequest;
 public class AuthExceptionHandler {
 
     @ExceptionHandler({DisabledException.class, BadCredentialsException.class})
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public ErrorMessage authenticateException(Exception ex, WebRequest request) {
         log.info(ex.getMessage());
-        return new ErrorMessage(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return new ErrorMessage(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
@@ -32,10 +32,10 @@ public class AuthExceptionHandler {
     }
 
     @ExceptionHandler({JwtException.class, TokenInvalidException.class})
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public ErrorMessage jwtException(Exception ex, WebRequest request) {
         log.error(ex.getMessage());
-        return new ErrorMessage(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return new ErrorMessage(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
 

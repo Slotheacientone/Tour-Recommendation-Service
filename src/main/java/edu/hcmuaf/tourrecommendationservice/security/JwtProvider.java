@@ -92,6 +92,10 @@ public class JwtProvider {
         return refreshTokenExpire;
     }
 
+    public long getAccessTokenExpire(){
+        return accessTokenExpire;
+    }
+
     public String parseTokenIdFromJwt(String refreshToken) {
         return Jwts.parser()
                 .setSigningKey(getSecretKey())

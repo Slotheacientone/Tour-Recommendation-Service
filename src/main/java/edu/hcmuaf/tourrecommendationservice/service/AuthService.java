@@ -7,6 +7,7 @@ import edu.hcmuaf.tourrecommendationservice.repository.UserRepository;
 import edu.hcmuaf.tourrecommendationservice.security.JwtProvider;
 import lombok.AllArgsConstructor;
 
+import org.apache.hadoop.yarn.webapp.hamlet.Hamlet;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -60,15 +61,17 @@ public class AuthService {
         }
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
+        final Instant now = Instant.now();
         final String token = jwtProvider.generateAccessToken(authenticate);
+        final Instant accessToken_expireAt = now.plus(jwtProvider.getAccessTokenExpire(), ChronoUnit.SECONDS);
         final String refreshToken = refreshTokenService.generate(request.getUsername());
 
         return AuthenticationResponse.builder()
                 .accessToken(token)
+                .accessToken_expireAt(accessToken_expireAt)
                 .refreshToken(refreshToken)
                 .build();
     }
-
 
     public RefreshTokenResponse refreshToken(RefreshTokenRequest request) {
         final String refreshToken = request.getRefreshToken();

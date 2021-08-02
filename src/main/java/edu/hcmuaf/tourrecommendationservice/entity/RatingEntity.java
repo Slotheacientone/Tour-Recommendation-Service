@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 @Setter
 @Getter
-public class CommentEntity {
+public class RatingEntity {
     /** User id. */
     private long userId;
 

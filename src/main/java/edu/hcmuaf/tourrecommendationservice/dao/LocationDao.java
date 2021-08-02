@@ -1,18 +1,13 @@
 package edu.hcmuaf.tourrecommendationservice.dao;
 
 import edu.hcmuaf.tourrecommendationservice.database.DatabaseManager;
-import edu.hcmuaf.tourrecommendationservice.entity.CommentEntity;
 import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
-import edu.hcmuaf.tourrecommendationservice.entity.RecommendEntity;
-import org.apache.avro.generic.GenericData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class LocationDao {
@@ -73,8 +68,8 @@ public class LocationDao {
             locationEntity.setLocationImageUrl(rs.getString("location_image"));
             locationEntity.setRatings(rs.getFloat("location_rating"));
             locationEntity.setNumberOfPeopleRating(rs.getInt("number_people_rating"));
-            locationEntity.setLocationLatitude(rs.getDouble("location_latitude"));
-            locationEntity.setLocationLongtitude(rs.getDouble("location_longtitude"));
+            locationEntity.setLocationLatitude(rs.getDouble("latitude"));
+            locationEntity.setLocationLongtitude(rs.getDouble("longtitude"));
         }
         rs.close();
         preparedStatement.close();

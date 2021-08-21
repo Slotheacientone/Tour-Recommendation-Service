@@ -2,7 +2,6 @@ package edu.hcmuaf.tourrecommendationservice.dao;
 
 import edu.hcmuaf.tourrecommendationservice.database.DatabaseManager;
 import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
-import edu.hcmuaf.tourrecommendationservice.entity.RatingEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,6 +42,7 @@ public class WishlistDao {
     }
 
     public List<LocationEntity> selectAllLocationFromWishlist(long userId) throws SQLException {
+        int wishListOrder =0;
         List<LocationEntity> locationEntities = new ArrayList<>();
         String sql = "select * from wishlist inner join location on wishlist.location_id=location.location_id where user_id=?";
         PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
@@ -56,7 +56,9 @@ public class WishlistDao {
             locationEntity.setRatings(rs.getFloat("location_rating"));
             locationEntity.setNumberOfPeopleRating(rs.getInt("number_people_rating"));
             locationEntity.setLocationLatitude(rs.getDouble("latitude"));
-            locationEntity.setLocationLongtitude(rs.getDouble("longtitude"));
+            locationEntity.setLocationLongitude(rs.getDouble("longtitude"));
+            wishListOrder++;
+            locationEntity.setWishListOrder(wishListOrder);
             locationEntities.add(locationEntity);
         }
         rs.close();

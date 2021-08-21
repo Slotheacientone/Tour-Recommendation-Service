@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 public class WishlistController {
@@ -38,9 +40,15 @@ public class WishlistController {
         }
     }
 
+
     @GetMapping("/api/wishlist/get-wishlist")
-    public ResponseEntity<List<LocationEntity>> getWishlist(@RequestParam long userId) throws SQLException {
-        List<LocationEntity> locationEntities = wishlistService.getWishlist(userId);
+    public ResponseEntity<List<LocationEntity>> getWishlist(@RequestParam long userId, @RequestParam(required = false) Double latitude, @RequestParam(required = false) Double longitude) throws SQLException, IOException, ExecutionException, InterruptedException {
+        List<LocationEntity> locationEntities;
+        if(latitude!=null && longitude!=null) {
+            locationEntities = wishlistService.getWishlist(userId, latitude, longitude);
+        }else{
+            locationEntities = wishlistService.getWishlist(userId);
+        }
         return new ResponseEntity<>(locationEntities, HttpStatus.OK);
     }
 }

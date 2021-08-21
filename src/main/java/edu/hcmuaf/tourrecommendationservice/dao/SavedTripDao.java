@@ -103,7 +103,7 @@ public class SavedTripDao {
             locationEntity.setRatings(rs.getFloat("location_rating"));
             locationEntity.setNumberOfPeopleRating(rs.getInt("number_people_rating"));
             locationEntity.setLocationLatitude(rs.getDouble("latitude"));
-            locationEntity.setLocationLongtitude(rs.getDouble("longtitude"));
+            locationEntity.setLocationLongitude(rs.getDouble("longtitude"));
             locationEntities.add(locationEntity);
         }
         rs.close();

@@ -53,7 +53,7 @@ public class RecommendateService {
      * Recommend location for user.
      *
      * @param userId user id
-     * @return List of {@link RecommendEntity}
+     * @return List of {@link LocationEntity}
      * @throws TasteException Taste exception
      */
     public List<LocationEntity> recommend(long userId, int numberOfRecommendation) throws TasteException, SQLException {
@@ -90,13 +90,9 @@ public class RecommendateService {
         for (RecommendedItem item : list) {
             long locationId = item.getItemID();
             float recommendScore = item.getValue();
-            int distance = -1;
+            long distance = -1;
             LocationEntity locationEntity = locationService.getLocation(locationId);
-            if (locationEntity.getLocationLatitude() != 0 && locationEntity.getLocationLongitude() != 0) {
-                distance = distanceMatrixApiService.calculateDistance(latitude, longitude, locationEntity.getLocationLatitude(), locationEntity.getLocationLongitude());
-            } else {
-                distance = distanceMatrixApiService.calculateDistance(latitude, longitude, locationEntity.getLocationName());
-            }
+            distance = distanceMatrixApiService.calculateDistance(latitude, longitude, locationEntity);
             locationEntity.setDistance(distance);
             locationEntity.setRecommendScore(recommendScore);
             result.add(locationEntity);

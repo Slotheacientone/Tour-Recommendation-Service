@@ -16,5 +16,7 @@ public class LocationRepository {
     public LocationEntity getLocation(long locationId) throws SQLException {
         return locationDao.selectLocation(locationId);
     }
-
+    public void setLatLong(LocationEntity locationEntity) throws SQLException {
+        locationDao.updateLatLong(locationEntity);
+    }
 }

@@ -25,6 +25,10 @@ public class ApiClient {
                 .build();
     }
 
+    public static OkHttpClient getClient(){
+        return client;
+    }
+
     public static CompletableFuture<Response> sendAsync(Request request) {
         return CompletableFuture.supplyAsync(() -> {
             try {

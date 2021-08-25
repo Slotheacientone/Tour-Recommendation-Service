@@ -16,4 +16,8 @@ public class LocationService {
     public LocationEntity getLocation(long locationId) throws SQLException {
         return locationRepository.getLocation(locationId);
     }
+
+    public void setLatLong(LocationEntity locationEntity) throws SQLException {
+        locationRepository.setLatLong(locationEntity);
+    }
 }

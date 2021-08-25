@@ -29,7 +29,7 @@ public class WishlistDao {
         return rowAffected > 0;
     }
 
-    public boolean deleteLocationoFromWishlist(long userId, long locationId) throws SQLException {
+    public boolean deleteLocationFromWishlist(long userId, long locationId) throws SQLException {
         int rowAffected = 0;
         String sql = "delete from wishlist where user_id=? and location_id=?";
         PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
@@ -56,7 +56,7 @@ public class WishlistDao {
             locationEntity.setRatings(rs.getFloat("location_rating"));
             locationEntity.setNumberOfPeopleRating(rs.getInt("number_people_rating"));
             locationEntity.setLocationLatitude(rs.getDouble("latitude"));
-            locationEntity.setLocationLongitude(rs.getDouble("longtitude"));
+            locationEntity.setLocationLongitude(rs.getDouble("longitude"));
             wishListOrder++;
             locationEntity.setWishListOrder(wishListOrder);
             locationEntities.add(locationEntity);

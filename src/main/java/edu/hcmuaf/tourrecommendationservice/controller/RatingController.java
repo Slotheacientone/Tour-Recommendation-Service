@@ -21,9 +21,9 @@ public class RatingController {
         boolean success;
         success = ratingService.registerRating(ratingRequest);
         if(success){
-            return new ResponseEntity<String>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }else{
-            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -32,9 +32,9 @@ public class RatingController {
         boolean success;
         success = ratingService.deleteRating(userId,locationId);
         if(success){
-            return new ResponseEntity<String>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }else{
-            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -42,6 +42,6 @@ public class RatingController {
     public ResponseEntity<List<RatingEntity>> getRatings(@RequestParam long locationId) throws SQLException {
         List<RatingEntity> ratingEntities;
         ratingEntities = ratingService.getRatings(locationId);
-        return new ResponseEntity<List<RatingEntity>>(ratingEntities,HttpStatus.OK);
+        return new ResponseEntity<>(ratingEntities, HttpStatus.OK);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -21,17 +22,10 @@ public class DistanceController {
     private DistanceMatrixApiService distanceMatrixApiService;
 
     @PostMapping("/api/distance/get-distances")
-    private ResponseEntity<List<LocationEntity>> getDistances(@RequestBody DistanceRequest distanceRequest) throws IOException, ExecutionException, InterruptedException {
-        List<LocationEntity> locations =distanceRequest.getLocations();
-        for(LocationEntity locationEntity: locations) {
-            int distance = -1;
-            if (locationEntity.getLocationLatitude() != 0 && locationEntity.getLocationLongitude() != 0) {
-                distance = distanceMatrixApiService.calculateDistance(distanceRequest.getLatitude(), distanceRequest.getLongitude(), locationEntity.getLocationLatitude(), locationEntity.getLocationLongitude());
-            } else {
-                distance = distanceMatrixApiService.calculateDistance(distanceRequest.getLatitude(), distanceRequest.getLongitude(), locationEntity.getLocationName());
-            }
-            locationEntity.setDistance(distance);
-        }
-        return new ResponseEntity<List<LocationEntity>>(locations, HttpStatus.OK);
+    private ResponseEntity<List<LocationEntity>> getDistances(@RequestBody DistanceRequest distanceRequest) throws IOException, ExecutionException, InterruptedException, SQLException {
+        List<LocationEntity> locations = distanceRequest.getLocations();
+        System.out.println("run");
+        distanceMatrixApiService.calculateDistances(distanceRequest.getLatitude(), distanceRequest.getLongitude(), locations);
+        return new ResponseEntity<>(locations, HttpStatus.OK);
     }
 }

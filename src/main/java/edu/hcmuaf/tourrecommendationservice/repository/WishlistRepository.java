@@ -19,7 +19,7 @@ public class WishlistRepository {
     }
 
     public boolean deleteLocationoFromWishlist(long userId, long locationId) throws SQLException {
-        return wishlistDao.deleteLocationoFromWishlist(userId,locationId);
+        return wishlistDao.deleteLocationFromWishlist(userId,locationId);
     }
 
     public List<LocationEntity> getWishlist(long userId) throws SQLException {

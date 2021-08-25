@@ -1,6 +1,5 @@
 package edu.hcmuaf.tourrecommendationservice.service;
 
-import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
 import edu.hcmuaf.tourrecommendationservice.entity.SavedTripEntity;
 import edu.hcmuaf.tourrecommendationservice.repository.SavedTripRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +23,15 @@ public class SavedTripService {
         return savedTripRepository.deleteSavedTrip(savedTripId);
     }
 
-    public List<SavedTripEntity> getSavedTripList(long userId) throws SQLException {
-        return savedTripRepository.getSavedTripList(userId);
+    public List<SavedTripEntity> getSavedTrips(long userId) throws SQLException {
+        return savedTripRepository.getSavedTrips(userId);
     }
 
     public SavedTripEntity getSavedTrip(long savedTripId) throws SQLException {
         return savedTripRepository.getSavedTrip(savedTripId);
+    }
+
+    public boolean deleteLocationFromSavedTrip(long savedTripId, long locationId) throws SQLException {
+        return savedTripRepository.deleteLocationFromSavedTrip(savedTripId,locationId);
     }
 }

@@ -15,46 +15,6 @@ public class LocationDao {
     @Autowired
     private DatabaseManager databaseManager;
 
-//    public long insertLocation(String locationName) throws SQLException {
-//        String sql = "insert ignore into location (location_name) values (?)";
-//        PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
-//        preparedStatement.setString(1, locationName);
-//        preparedStatement.executeUpdate();
-//        preparedStatement.close();
-//        databaseManager.closeConnection();
-//        return selectLocationId(locationName);
-//    }
-
-//    public long selectLocationId(String locationName) throws SQLException {
-//        long id = 0;
-//        String sql = "select location_id from location where location_name=?";
-//        PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
-//        preparedStatement.setString(1, locationName);
-//        ResultSet rs = preparedStatement.executeQuery();
-//        if (rs.next()) {
-//            id = rs.getLong("location_id");
-//        }
-//        rs.close();
-//        preparedStatement.close();
-//        databaseManager.closeConnection();
-//        return id;
-//    }
-
-//    public String selectLocationName(long locationId) throws SQLException {
-//        String name = null;
-//        String sql = "select location_name from location where location_id=?";
-//        PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
-//        preparedStatement.setLong(1, locationId);
-//        ResultSet rs = preparedStatement.executeQuery();
-//        if (rs.next()) {
-//            name = rs.getString("location_name");
-//        }
-//        rs.close();
-//        preparedStatement.close();
-//        databaseManager.closeConnection();
-//        return name;
-//    }
-
     public LocationEntity selectLocation(long locationId) throws SQLException {
         LocationEntity locationEntity = null;
         String sql = "select * from location where location_id=?";
@@ -69,11 +29,22 @@ public class LocationDao {
             locationEntity.setRatings(rs.getFloat("location_rating"));
             locationEntity.setNumberOfPeopleRating(rs.getInt("number_people_rating"));
             locationEntity.setLocationLatitude(rs.getDouble("latitude"));
-            locationEntity.setLocationLongitude(rs.getDouble("longtitude"));
+            locationEntity.setLocationLongitude(rs.getDouble("longitude"));
         }
         rs.close();
         preparedStatement.close();
         databaseManager.closeConnection();
         return locationEntity;
+    }
+
+    public void updateLatLong(LocationEntity location) throws SQLException {
+        String sql = "update location set latitude=?,longitude=? where location_id=?";
+        PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
+        preparedStatement.setDouble(1, location.getLocationLatitude());
+        preparedStatement.setDouble(2, location.getLocationLongitude());
+        preparedStatement.setLong(3,location.getLocationId());
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+        databaseManager.closeConnection();
     }
 }

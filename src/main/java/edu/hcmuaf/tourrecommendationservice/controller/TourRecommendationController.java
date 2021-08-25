@@ -32,7 +32,7 @@ public class TourRecommendationController {
         } else {
             recommendation = recommendateService.recommend(userId, numberOfRecommendation);
         }
-        return new ResponseEntity<List<LocationEntity>>(recommendation, HttpStatus.OK);
+        return new ResponseEntity<>(recommendation, HttpStatus.OK);
     }
 
 }

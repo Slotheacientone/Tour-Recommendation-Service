@@ -1,17 +1,18 @@
 package edu.hcmuaf.tourrecommendationservice.service;
 
 import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
-import edu.hcmuaf.tourrecommendationservice.model.googleMapDistance.DistanceApiResult;
 import edu.hcmuaf.tourrecommendationservice.util.ApiClient;
-import edu.hcmuaf.tourrecommendationservice.util.Utils;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
+import java.sql.SQLException;
 
 @Service
 public class GeocodingApiService {
@@ -22,7 +23,10 @@ public class GeocodingApiService {
     @Value("${google.api.key}")
     private String googleApiKey;
 
-    public void setLatlong(LocationEntity location) throws ExecutionException, InterruptedException, IOException {
+    @Autowired
+    private LocationService locationService;
+
+    public boolean getLatlong(LocationEntity location) throws IOException, SQLException {
         HttpUrl.Builder urlBuilder
                 = HttpUrl.parse(geocodingApiBaseUri).newBuilder();
         urlBuilder.addQueryParameter("address", location.getLocationName());
@@ -31,11 +35,21 @@ public class GeocodingApiService {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
-        Response response = ApiClient.sendAsync(request).get();
+        System.out.println(request);
+        Response response = ApiClient.getClient().newCall(request).execute();
         if (response!=null && response.isSuccessful()) {
           String json = response.body().string();
-
+            JSONObject geocoderResult = new JSONObject(json);
+            JSONArray results = geocoderResult.getJSONArray("results");
+            JSONObject result = results.getJSONObject(0);
+            JSONObject geometry = result.getJSONObject("geometry");
+            JSONObject latlong = geometry.getJSONObject("location");
+            location.setLocationLatitude(latlong.getDouble("lat"));
+            location.setLocationLongitude(latlong.getDouble("lng"));
+            locationService.setLatLong(location);
+            return true;
         }
+        return false;
     }
 
 }

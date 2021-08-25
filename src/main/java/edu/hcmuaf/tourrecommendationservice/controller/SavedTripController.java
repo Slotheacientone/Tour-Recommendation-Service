@@ -1,6 +1,5 @@
 package edu.hcmuaf.tourrecommendationservice.controller;
 
-import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
 import edu.hcmuaf.tourrecommendationservice.entity.SavedTripEntity;
 import edu.hcmuaf.tourrecommendationservice.service.SavedTripService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +20,9 @@ public class SavedTripController {
     public ResponseEntity<String> saveTrip(@RequestBody SavedTripEntity savedTrip) throws SQLException {
         boolean success = savedTripService.saveTrip(savedTrip);
         if(success){
-            return new ResponseEntity<String>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }else{
-            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -31,21 +30,31 @@ public class SavedTripController {
     public ResponseEntity<String> deleteSavedTrip(@RequestParam long savedTripId) throws SQLException {
         boolean success = savedTripService.deleteSavedTrip(savedTripId);
         if(success){
-            return new ResponseEntity<String>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }else{
-            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/api/save-trip/get-saved_trip_list")
-    public ResponseEntity<List<SavedTripEntity>> getSavedTripList(@RequestParam long userId) throws SQLException {
-        List<SavedTripEntity> savedTripEntities = savedTripService.getSavedTripList(userId);
+    @GetMapping("/api/save-trip/get-saved-trips")
+    public ResponseEntity<List<SavedTripEntity>> getSavedTrips(@RequestParam long userId) throws SQLException {
+        List<SavedTripEntity> savedTripEntities = savedTripService.getSavedTrips(userId);
         return new ResponseEntity<>(savedTripEntities, HttpStatus.OK);
     }
 
-    @GetMapping("/api/save-trip/get-saved_trip")
+    @GetMapping("/api/save-trip/get-saved-trip")
     public ResponseEntity<SavedTripEntity> getSavedTrip(@RequestParam long savedTripId) throws SQLException {
         SavedTripEntity savedTripEntities = savedTripService.getSavedTrip(savedTripId);
         return new ResponseEntity<>(savedTripEntities, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/save-trip/delete-location-from-saved-trip")
+    public ResponseEntity<String> deleteLocationFromSavedTrip(@RequestParam long savedTripId, @RequestParam long locationId) throws SQLException {
+        boolean isSuccess = savedTripService.deleteLocationFromSavedTrip(savedTripId, locationId);
+        if(isSuccess){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

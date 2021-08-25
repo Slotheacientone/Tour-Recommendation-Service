@@ -24,11 +24,15 @@ public class SavedTripRepository {
         return savedTripDao.deleteSavedTrip(savedTripId);
     }
 
-    public List<SavedTripEntity> getSavedTripList(long userId) throws SQLException {
+    public List<SavedTripEntity> getSavedTrips(long userId) throws SQLException {
         return savedTripDao.selectAllSavedTrip(userId);
     }
 
     public SavedTripEntity getSavedTrip(long savedTripId) throws SQLException {
         return savedTripDao.selectSavedTrip(savedTripId);
+    }
+
+    public boolean deleteLocationFromSavedTrip(long savedTripId, long locationId) throws SQLException {
+        return savedTripDao.deleteLocationFromSavedTrip(savedTripId,locationId);
     }
 }

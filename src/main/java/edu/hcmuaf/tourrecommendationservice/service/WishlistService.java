@@ -19,6 +19,9 @@ public class WishlistService {
     @Autowired
     private DistanceMatrixApiService distanceMatrixApiService;
 
+    @Autowired
+    private GeocodingApiService geocodingApiService;
+
 
     public boolean addLocationToWishlist(long userId, long locationId) throws SQLException {
         return wishlistRepository.addLocationToWishlist(userId, locationId);
@@ -34,15 +37,7 @@ public class WishlistService {
 
     public List<LocationEntity> getWishlist(long userId, double latitude, double longitude) throws SQLException, IOException, ExecutionException, InterruptedException {
         List<LocationEntity> wishlist = wishlistRepository.getWishlist(userId);
-        for (LocationEntity locationEntity: wishlist){
-            int distance = -1;
-            if (locationEntity.getLocationLatitude() != 0 && locationEntity.getLocationLongitude() != 0) {
-                distance = distanceMatrixApiService.calculateDistance(latitude, longitude, locationEntity.getLocationLatitude(), locationEntity.getLocationLongitude());
-            } else {
-                distance = distanceMatrixApiService.calculateDistance(latitude, longitude, locationEntity.getLocationName());
-            }
-            locationEntity.setDistance(distance);
-        }
+        distanceMatrixApiService.calculateDistances(latitude, longitude, wishlist);
         return wishlist;
     }
 }

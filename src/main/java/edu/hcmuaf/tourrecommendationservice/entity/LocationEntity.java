@@ -25,6 +25,6 @@ public class LocationEntity {
      */
     private double locationLongitude;
 
-    private int distance;
+    private long distance;
     private int wishListOrder;
 }

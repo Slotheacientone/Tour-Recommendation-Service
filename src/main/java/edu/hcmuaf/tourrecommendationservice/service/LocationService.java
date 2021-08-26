@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Service
 public class LocationService {
@@ -19,5 +20,13 @@ public class LocationService {
 
     public void setLatLong(LocationEntity locationEntity) throws SQLException {
         locationRepository.setLatLong(locationEntity);
+    }
+
+    public List<LocationEntity> filter(String name) throws SQLException {
+        return locationRepository.filter(name);
+    }
+
+    public List<LocationEntity> topRating(int limit) throws SQLException {
+        return locationRepository.topRating(limit);
     }
 }

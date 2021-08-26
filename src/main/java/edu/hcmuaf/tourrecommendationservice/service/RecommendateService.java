@@ -3,6 +3,9 @@ package edu.hcmuaf.tourrecommendationservice.service;
 import edu.hcmuaf.tourrecommendationservice.database.DatabaseManager;
 import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
 import edu.hcmuaf.tourrecommendationservice.entity.RecommendEntity;
+import edu.hcmuaf.tourrecommendationservice.recommender.TourRecommender;
+import edu.hcmuaf.tourrecommendationservice.repository.LocationRepository;
+import edu.hcmuaf.tourrecommendationservice.repository.WishlistRepository;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.model.jdbc.MySQLJDBCDataModel;
 import org.apache.mahout.cf.taste.impl.recommender.GenericItemBasedRecommender;
@@ -10,6 +13,7 @@ import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
 import org.apache.mahout.cf.taste.model.JDBCDataModel;
 import org.apache.mahout.cf.taste.recommender.ItemBasedRecommender;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
+import org.apache.mahout.cf.taste.recommender.Recommender;
 import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,6 +44,12 @@ public class RecommendateService {
     @Autowired
     private LocationService locationService;
 
+    @Autowired
+    private WishlistRepository wishlistRepository;
+
+    @Autowired
+    private LocationRepository locationRepository;
+
     /**
      * Database manager.
      */
@@ -58,10 +68,16 @@ public class RecommendateService {
      */
     public List<LocationEntity> recommend(long userId, int numberOfRecommendation) throws TasteException, SQLException {
         List<LocationEntity> result = new ArrayList<>();
-        // Item base PearsonCorrelation
+
         JDBCDataModel dataModel1 = new MySQLJDBCDataModel(databaseManager.getDataSource(), "user_rating", "user_id", "location_id", "preference", null);
-        ItemSimilarity itemSimilarity1 = new PearsonCorrelationSimilarity(dataModel1);
-        ItemBasedRecommender recommender = new GenericItemBasedRecommender(dataModel1, itemSimilarity1);
+
+        // Item base PearsonCorrelation
+//        ItemSimilarity itemSimilarity1 = new PearsonCorrelationSimilarity(dataModel1);
+//        ItemBasedRecommender recommender = new GenericItemBasedRecommender(dataModel1, itemSimilarity1);
+
+        // tour recommender
+        Recommender recommender = new TourRecommender(dataModel1, wishlistRepository, locationRepository);
+
         List<RecommendedItem> list = recommender.recommend(userId, numberOfRecommendation);
         for (RecommendedItem item : list) {
             long locationId = item.getItemID();
@@ -84,8 +100,13 @@ public class RecommendateService {
         List<LocationEntity> result = new ArrayList<>();
         // Item base PearsonCorrelation
         JDBCDataModel dataModel1 = new MySQLJDBCDataModel(databaseManager.getDataSource(), "user_rating", "user_id", "location_id", "preference", null);
-        ItemSimilarity itemSimilarity1 = new PearsonCorrelationSimilarity(dataModel1);
-        ItemBasedRecommender recommender = new GenericItemBasedRecommender(dataModel1, itemSimilarity1);
+
+        //item based
+//        ItemSimilarity itemSimilarity1 = new PearsonCorrelationSimilarity(dataModel1);
+//        ItemBasedRecommender recommender = new GenericItemBasedRecommender(dataModel1, itemSimilarity1);
+
+        //tour recommender
+        Recommender recommender = new TourRecommender(dataModel1, wishlistRepository, locationRepository);
         List<RecommendedItem> list = recommender.recommend(userId, numberOfRecommendation);
         for (RecommendedItem item : list) {
             long locationId = item.getItemID();

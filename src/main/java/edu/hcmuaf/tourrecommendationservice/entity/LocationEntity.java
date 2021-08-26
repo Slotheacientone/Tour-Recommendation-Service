@@ -15,6 +15,7 @@ public class LocationEntity {
     private float ratings;
     private float recommendScore;
     private int numberOfPeopleRating;
+    private String category;
     /**
      * Location latitude.
      */

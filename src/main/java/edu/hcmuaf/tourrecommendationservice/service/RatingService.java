@@ -25,4 +25,5 @@ public class RatingService {
     public boolean deleteRating(long userId, long locationId) throws SQLException {
         return ratingRepository.deleteRating(userId,locationId);
     }
+
 }

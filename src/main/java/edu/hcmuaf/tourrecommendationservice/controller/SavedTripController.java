@@ -1,6 +1,8 @@
 package edu.hcmuaf.tourrecommendationservice.controller;
 
-import edu.hcmuaf.tourrecommendationservice.entity.SavedTripEntity;
+import edu.hcmuaf.tourrecommendationservice.dto.SavedTripRequest;
+import edu.hcmuaf.tourrecommendationservice.dto.SavedTripResponse;
+import edu.hcmuaf.tourrecommendationservice.entity.SavedTrip;
 import edu.hcmuaf.tourrecommendationservice.service.SavedTripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +19,8 @@ public class SavedTripController {
     private SavedTripService savedTripService;
 
     @PostMapping("/api/save-trip/save-trip")
-    public ResponseEntity<String> saveTrip(@RequestBody SavedTripEntity savedTrip) throws SQLException {
-        boolean success = savedTripService.saveTrip(savedTrip);
+    public ResponseEntity<String> saveTrip(@RequestBody SavedTripRequest savedTripRequest) throws SQLException {
+        boolean success = savedTripService.saveTrip(savedTripRequest);
         if(success){
             return new ResponseEntity<>(HttpStatus.OK);
         }else{
@@ -37,15 +39,15 @@ public class SavedTripController {
     }
 
     @GetMapping("/api/save-trip/get-saved-trips")
-    public ResponseEntity<List<SavedTripEntity>> getSavedTrips(@RequestParam long userId) throws SQLException {
-        List<SavedTripEntity> savedTripEntities = savedTripService.getSavedTrips(userId);
-        return new ResponseEntity<>(savedTripEntities, HttpStatus.OK);
+    public ResponseEntity<List<SavedTripResponse>> getSavedTrips(@RequestParam long userId) throws SQLException {
+        List<SavedTripResponse> savedTripResponses = savedTripService.getSavedTrips(userId);
+        return new ResponseEntity<>(savedTripResponses, HttpStatus.OK);
     }
 
     @GetMapping("/api/save-trip/get-saved-trip")
-    public ResponseEntity<SavedTripEntity> getSavedTrip(@RequestParam long savedTripId) throws SQLException {
-        SavedTripEntity savedTripEntities = savedTripService.getSavedTrip(savedTripId);
-        return new ResponseEntity<>(savedTripEntities, HttpStatus.OK);
+    public ResponseEntity<SavedTripResponse> getSavedTrip(@RequestParam long savedTripId) throws SQLException {
+        SavedTripResponse savedTripResponse = savedTripService.getSavedTrip(savedTripId);
+        return new ResponseEntity<>(savedTripResponse, HttpStatus.OK);
     }
 
     @GetMapping("/api/save-trip/delete-location-from-saved-trip")

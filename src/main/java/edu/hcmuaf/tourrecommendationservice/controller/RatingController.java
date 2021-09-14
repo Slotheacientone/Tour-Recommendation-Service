@@ -1,7 +1,8 @@
 package edu.hcmuaf.tourrecommendationservice.controller;
 
 import edu.hcmuaf.tourrecommendationservice.dto.RatingRequest;
-import edu.hcmuaf.tourrecommendationservice.entity.RatingEntity;
+import edu.hcmuaf.tourrecommendationservice.dto.RatingResponse;
+import edu.hcmuaf.tourrecommendationservice.entity.Rating;
 import edu.hcmuaf.tourrecommendationservice.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,8 +40,8 @@ public class RatingController {
     }
 
     @GetMapping("/api/rating/get-ratings")
-    public ResponseEntity<List<RatingEntity>> getRatings(@RequestParam long locationId) throws SQLException {
-        List<RatingEntity> ratingEntities;
+    public ResponseEntity<List<RatingResponse>> getRatings(@RequestParam long locationId) throws SQLException {
+        List<RatingResponse> ratingEntities;
         ratingEntities = ratingService.getRatings(locationId);
         return new ResponseEntity<>(ratingEntities, HttpStatus.OK);
     }

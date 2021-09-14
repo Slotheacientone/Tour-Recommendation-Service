@@ -1,6 +1,7 @@
 package edu.hcmuaf.tourrecommendationservice.controller;
 
-import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
+import edu.hcmuaf.tourrecommendationservice.dto.LocationResponse;
+import edu.hcmuaf.tourrecommendationservice.entity.Location;
 import edu.hcmuaf.tourrecommendationservice.service.WishlistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,8 +43,8 @@ public class WishlistController {
 
 
     @GetMapping("/api/wishlist/get-wishlist")
-    public ResponseEntity<List<LocationEntity>> getWishlist(@RequestParam long userId, @RequestParam(required = false) Double latitude, @RequestParam(required = false) Double longitude) throws SQLException, IOException, ExecutionException, InterruptedException {
-        List<LocationEntity> locationEntities;
+    public ResponseEntity<List<LocationResponse>> getWishlist(@RequestParam long userId, @RequestParam(required = false) Double latitude, @RequestParam(required = false) Double longitude) throws SQLException, IOException {
+        List<LocationResponse> locationEntities;
         if(latitude!=null && longitude!=null) {
             locationEntities = wishlistService.getWishlist(userId, latitude, longitude);
         }else{

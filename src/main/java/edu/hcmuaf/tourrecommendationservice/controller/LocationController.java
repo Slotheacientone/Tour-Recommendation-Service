@@ -1,6 +1,6 @@
 package edu.hcmuaf.tourrecommendationservice.controller;
 
-import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
+import edu.hcmuaf.tourrecommendationservice.entity.Location;
 import edu.hcmuaf.tourrecommendationservice.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,13 +18,13 @@ public class LocationController {
 
     @GetMapping("/top")
     @ResponseStatus(HttpStatus.OK)
-    public List<LocationEntity> getTopRating(@RequestParam int limit) throws SQLException {
+    public List<Location> getTopRating(@RequestParam int limit) throws SQLException {
         return locationService.topRating(limit);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<LocationEntity> filter(@RequestParam(required = false) String name) throws SQLException {
+    public List<Location> filter(@RequestParam(required = false) String name) throws SQLException {
         return locationService.filter(name);
     }
 

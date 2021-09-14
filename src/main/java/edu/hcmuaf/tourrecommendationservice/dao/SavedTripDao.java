@@ -1,8 +1,9 @@
 package edu.hcmuaf.tourrecommendationservice.dao;
 
 import edu.hcmuaf.tourrecommendationservice.database.DatabaseManager;
-import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
-import edu.hcmuaf.tourrecommendationservice.entity.SavedTripEntity;
+import edu.hcmuaf.tourrecommendationservice.entity.Location;
+import edu.hcmuaf.tourrecommendationservice.entity.SavedTrip;
+import edu.hcmuaf.tourrecommendationservice.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,13 +20,13 @@ public class SavedTripDao {
     @Autowired
     private DatabaseManager databaseManager;
 
-    public boolean insertSavedTrip(SavedTripEntity savedTrip) throws SQLException {
+    public boolean insertSavedTrip(SavedTrip savedTrip) throws SQLException {
         int rowAffected;
         long savedTripId;
         String insertSavedTripSql = "insert ignore into saved_trip (user_id) values (?)";
         Connection connection = databaseManager.openConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(insertSavedTripSql);
-        preparedStatement.setLong(1, savedTrip.getUserId());
+        preparedStatement.setLong(1, savedTrip.getUser().getUserId());
         rowAffected = preparedStatement.executeUpdate();
         preparedStatement.close();
         String getLastInsertIdSql = "select last_insert_id()";
@@ -38,12 +39,12 @@ public class SavedTripDao {
         return rowAffected > 0;
     }
 
-    public void insertLocationToSavedTrip(long savedTripId, List<LocationEntity> locationEntities) throws SQLException {
+    public void insertLocationToSavedTrip(long savedTripId, List<Location> locationEntities) throws SQLException {
         String sql = "insert ignore into saved_trip_location (saved_trip_id,location_id) values (?,?)";
         PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
-        for (LocationEntity locationEntity : locationEntities) {
+        for (Location location : locationEntities) {
             preparedStatement.setLong(1, savedTripId);
-            preparedStatement.setLong(2, locationEntity.getLocationId());
+            preparedStatement.setLong(2, location.getLocationId());
             preparedStatement.executeUpdate();
         }
         preparedStatement.close();
@@ -66,44 +67,47 @@ public class SavedTripDao {
         return rowAffected > 0;
     }
 
-    public List<SavedTripEntity> selectAllSavedTrip(long userId) throws SQLException {
-        List<SavedTripEntity> SavedTripEntities = new ArrayList<>();
+    public List<SavedTrip> selectAllSavedTrip(long userId) throws SQLException {
+        List<SavedTrip> savedTrips = new ArrayList<>();
         String sql = "select * from saved_trip where user_id =?";
         PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
         preparedStatement.setLong(1, userId);
         ResultSet rs = preparedStatement.executeQuery();
         while (rs.next()) {
-            SavedTripEntity savedTripEntity = new SavedTripEntity();
+            SavedTrip savedTrip = new SavedTrip();
             long savedTripId = rs.getLong("saved_trip_id");
-            List<LocationEntity> locationEntities = selectAllSavedTripLocation(savedTripId);
-            savedTripEntity.setSavedTripLocations(locationEntities);
-            savedTripEntity.setSavedTripId(savedTripId);
-            savedTripEntity.setUserId(rs.getLong("user_id"));
-            SavedTripEntities.add(savedTripEntity);
+            List<Location> locationEntities = selectAllSavedTripLocation(savedTripId);
+            savedTrip.setSavedTripLocations(locationEntities);
+            savedTrip.setSavedTripId(savedTripId);
+            User user = new User();
+            user.setUserId(rs.getLong("user_id"));
+            savedTrip.setUser(user);
+            savedTrips.add(savedTrip);
         }
         rs.close();
         preparedStatement.close();
         databaseManager.closeConnection();
-        return SavedTripEntities;
+        return savedTrips;
     }
 
-    public List<LocationEntity> selectAllSavedTripLocation(long savedTripId) throws SQLException {
-        List<LocationEntity> locationEntities = new ArrayList<>();
+    public List<Location> selectAllSavedTripLocation(long savedTripId) throws SQLException {
+        List<Location> locationEntities = new ArrayList<>();
         String sql = "select * from saved_trip_location inner join location " +
                 "on saved_trip_location.location_id=location.location_id where saved_trip_id=?";
         PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
         preparedStatement.setLong(1, savedTripId);
         ResultSet rs = preparedStatement.executeQuery();
-        if (rs.next()) {
-            LocationEntity locationEntity = new LocationEntity();
-            locationEntity.setLocationId(rs.getLong("location_id"));
-            locationEntity.setLocationName(rs.getString("location_name"));
-            locationEntity.setLocationImageUrl(rs.getString("location_image"));
-            locationEntity.setRatings(rs.getFloat("location_rating"));
-            locationEntity.setNumberOfPeopleRating(rs.getInt("number_people_rating"));
-            locationEntity.setLocationLatitude(rs.getDouble("latitude"));
-            locationEntity.setLocationLongitude(rs.getDouble("longitude"));
-            locationEntities.add(locationEntity);
+        while (rs.next()) {
+            Location location = new Location();
+            location.setLocationId(rs.getLong("location_id"));
+            location.setLocationName(rs.getString("location_name"));
+            location.setLocationImageUrl(rs.getString("location_image"));
+            location.setRatings(rs.getFloat("location_rating"));
+            location.setNumberOfPeopleRating(rs.getInt("number_people_rating"));
+            location.setLocationLatitude(rs.getDouble("latitude"));
+            location.setLocationLongitude(rs.getDouble("longitude"));
+            location.setCategory(rs.getString("location_category"));
+            locationEntities.add(location);
         }
         rs.close();
         preparedStatement.close();
@@ -111,23 +115,25 @@ public class SavedTripDao {
         return locationEntities;
     }
 
-    public SavedTripEntity selectSavedTrip(long savedTripId) throws SQLException {
-        SavedTripEntity savedTripEntity = null;
+    public SavedTrip selectSavedTrip(long savedTripId) throws SQLException {
+        SavedTrip savedTrip = null;
         String sql = "select * from saved_trip where saved_trip_id =?";
         PreparedStatement preparedStatement = databaseManager.openConnection().prepareStatement(sql);
         preparedStatement.setLong(1, savedTripId);
         ResultSet rs = preparedStatement.executeQuery();
         if (rs.next()) {
-            savedTripEntity = new SavedTripEntity();
-            List<LocationEntity> locationEntities = selectAllSavedTripLocation(savedTripId);
-            savedTripEntity.setSavedTripLocations(locationEntities);
-            savedTripEntity.setSavedTripId(savedTripId);
-            savedTripEntity.setUserId(rs.getLong("user_id"));
+            savedTrip = new SavedTrip();
+            List<Location> locationEntities = selectAllSavedTripLocation(savedTripId);
+            savedTrip.setSavedTripLocations(locationEntities);
+            savedTrip.setSavedTripId(savedTripId);
+            User user = new User();
+            user.setUserId(rs.getLong("user_id"));
+            savedTrip.setUser(user);
         }
         rs.close();
         preparedStatement.close();
         databaseManager.closeConnection();
-        return savedTripEntity;
+        return savedTrip;
     }
 
     public int getSavedTripLocationCount(long savedTripId) throws SQLException {

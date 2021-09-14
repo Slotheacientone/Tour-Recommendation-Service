@@ -1,6 +1,8 @@
 package edu.hcmuaf.tourrecommendationservice.service;
 
-import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
+import edu.hcmuaf.tourrecommendationservice.dto.LocationResponse;
+import edu.hcmuaf.tourrecommendationservice.dto.RecommendResponse;
+import edu.hcmuaf.tourrecommendationservice.entity.Location;
 import edu.hcmuaf.tourrecommendationservice.util.ApiClient;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
@@ -26,10 +28,10 @@ public class GeocodingApiService {
     @Autowired
     private LocationService locationService;
 
-    public boolean getLatlong(LocationEntity location) throws IOException, SQLException {
+    public boolean getLatlong(LocationResponse locationResponse) throws IOException, SQLException {
         HttpUrl.Builder urlBuilder
                 = HttpUrl.parse(geocodingApiBaseUri).newBuilder();
-        urlBuilder.addQueryParameter("address", location.getLocationName());
+        urlBuilder.addQueryParameter("address", locationResponse.getLocationName() + ", Vietnam");
         urlBuilder.addQueryParameter("key", googleApiKey);
         String url = urlBuilder.build().toString();
         Request request = new Request.Builder()
@@ -37,15 +39,19 @@ public class GeocodingApiService {
                 .build();
         System.out.println(request);
         Response response = ApiClient.getClient().newCall(request).execute();
-        if (response!=null && response.isSuccessful()) {
+        if (response.isSuccessful()) {
           String json = response.body().string();
             JSONObject geocoderResult = new JSONObject(json);
             JSONArray results = geocoderResult.getJSONArray("results");
             JSONObject result = results.getJSONObject(0);
             JSONObject geometry = result.getJSONObject("geometry");
             JSONObject latlong = geometry.getJSONObject("location");
-            location.setLocationLatitude(latlong.getDouble("lat"));
-            location.setLocationLongitude(latlong.getDouble("lng"));
+            locationResponse.setLocationLatitude(latlong.getDouble("lat"));
+            locationResponse.setLocationLongitude(latlong.getDouble("lng"));
+            Location location = new Location();
+            location.setLocationLatitude(locationResponse.getLocationLatitude());
+            location.setLocationLongitude(locationResponse.getLocationLongitude());
+            location.setLocationId(locationResponse.getLocationId());
             locationService.setLatLong(location);
             return true;
         }

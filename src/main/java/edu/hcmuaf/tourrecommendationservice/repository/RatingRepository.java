@@ -2,7 +2,7 @@ package edu.hcmuaf.tourrecommendationservice.repository;
 
 import edu.hcmuaf.tourrecommendationservice.dao.RatingDao;
 import edu.hcmuaf.tourrecommendationservice.dto.RatingRequest;
-import edu.hcmuaf.tourrecommendationservice.entity.RatingEntity;
+import edu.hcmuaf.tourrecommendationservice.entity.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +15,7 @@ public class RatingRepository {
     @Autowired
     private RatingDao ratingDao;
 
-    public List<RatingEntity> getRatings(long locationId) throws SQLException {
+    public List<Rating> getRatings(long locationId) throws SQLException {
         return ratingDao.selectAllRating(locationId);
     }
 

@@ -1,6 +1,6 @@
 package edu.hcmuaf.tourrecommendationservice.recommender;
 
-import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
+import edu.hcmuaf.tourrecommendationservice.entity.Location;
 import edu.hcmuaf.tourrecommendationservice.repository.LocationRepository;
 import lombok.SneakyThrows;
 import org.apache.mahout.cf.taste.recommender.IDRescorer;
@@ -8,10 +8,10 @@ import org.apache.mahout.cf.taste.recommender.IDRescorer;
 import java.util.List;
 
 public class TourRescore implements IDRescorer {
-    private List<LocationEntity> locations;
+    private List<Location> locations;
     private LocationRepository locationRepository;
 
-    public TourRescore(List<LocationEntity> locations, LocationRepository locationRepository) {
+    public TourRescore(List<Location> locations, LocationRepository locationRepository) {
         this.locations = locations;
         this.locationRepository = locationRepository;
     }
@@ -19,7 +19,7 @@ public class TourRescore implements IDRescorer {
     @SneakyThrows
     @Override
     public double rescore(long itemId, double originalScore) {
-        LocationEntity location = locationRepository.getLocation(itemId);
+        Location location = locationRepository.getLocation(itemId);
         boolean contains = locations.stream().anyMatch(item -> item.getCategory().contains(location.getCategory()));
         if (contains) {
             return originalScore * 1.2;

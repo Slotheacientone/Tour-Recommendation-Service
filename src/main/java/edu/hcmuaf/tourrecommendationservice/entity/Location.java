@@ -5,15 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Data
-@Setter
-@Getter
-public class LocationEntity {
+public class Location {
     /** Location id. */
     private long locationId;
     private String locationName;
     private String locationImageUrl;
     private float ratings;
-    private float recommendScore;
     private int numberOfPeopleRating;
     private String category;
     /**
@@ -26,6 +23,4 @@ public class LocationEntity {
      */
     private double locationLongitude;
 
-    private long distance;
-    private int wishListOrder;
 }

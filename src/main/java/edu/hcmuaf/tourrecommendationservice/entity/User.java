@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Data
 public class User {
-    private String userId;
+    private long userId;
     private String name;
     private String username;
     private String password;

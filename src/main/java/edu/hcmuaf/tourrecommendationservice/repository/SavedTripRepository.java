@@ -1,9 +1,7 @@
 package edu.hcmuaf.tourrecommendationservice.repository;
 
 import edu.hcmuaf.tourrecommendationservice.dao.SavedTripDao;
-import edu.hcmuaf.tourrecommendationservice.dao.WishlistDao;
-import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
-import edu.hcmuaf.tourrecommendationservice.entity.SavedTripEntity;
+import edu.hcmuaf.tourrecommendationservice.entity.SavedTrip;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +14,7 @@ public class SavedTripRepository {
     @Autowired
     private SavedTripDao savedTripDao;
 
-    public boolean saveTrip(SavedTripEntity savedTrip) throws SQLException {
+    public boolean saveTrip(SavedTrip savedTrip) throws SQLException {
         return savedTripDao.insertSavedTrip(savedTrip);
     }
 
@@ -24,11 +22,11 @@ public class SavedTripRepository {
         return savedTripDao.deleteSavedTrip(savedTripId);
     }
 
-    public List<SavedTripEntity> getSavedTrips(long userId) throws SQLException {
+    public List<SavedTrip> getSavedTrips(long userId) throws SQLException {
         return savedTripDao.selectAllSavedTrip(userId);
     }
 
-    public SavedTripEntity getSavedTrip(long savedTripId) throws SQLException {
+    public SavedTrip getSavedTrip(long savedTripId) throws SQLException {
         return savedTripDao.selectSavedTrip(savedTripId);
     }
 

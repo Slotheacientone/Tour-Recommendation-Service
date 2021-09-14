@@ -1,8 +1,9 @@
 package edu.hcmuaf.tourrecommendationservice.service;
 
 
-import edu.hcmuaf.tourrecommendationservice.InterfaceAPI.DistanceApiInterface;
-import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
+import edu.hcmuaf.tourrecommendationservice.dto.LocationResponse;
+import edu.hcmuaf.tourrecommendationservice.dto.RecommendResponse;
+import edu.hcmuaf.tourrecommendationservice.entity.Location;
 import edu.hcmuaf.tourrecommendationservice.model.googleMapDistance.DistanceApiResult;
 import edu.hcmuaf.tourrecommendationservice.util.ApiClient;
 import edu.hcmuaf.tourrecommendationservice.util.Utils;
@@ -30,15 +31,14 @@ public class DistanceMatrixApiService {
     @Autowired
     private GeocodingApiService geocodingApiService;
 
-    public long calculateDistance(double currentLatitude, double currentLongtitude, LocationEntity locationEntity) throws ExecutionException, InterruptedException, IOException {
-        System.out.println("calculate");
+    public long calculateDistance(double currentLatitude, double currentLongtitude, LocationResponse locationResponse) throws IOException {
         int distance = -1;
         String origin = currentLatitude + "," + currentLongtitude;
         String destination;
-        if (locationEntity.getLocationLatitude() != 0.0 && locationEntity.getLocationLongitude() != 0.0) {
-            destination = locationEntity.getLocationLatitude() + "," + locationEntity.getLocationLongitude();
+        if (locationResponse.getLocationLatitude() != 0.0 && locationResponse.getLocationLongitude() != 0.0) {
+            destination = locationResponse.getLocationLatitude() + "," + locationResponse.getLocationLongitude();
         } else {
-            destination = locationEntity.getLocationName();
+            destination = locationResponse.getLocationName();
         }
         HttpUrl.Builder urlBuilder
                 = HttpUrl.parse(distanceMatrixApiBaseUri).newBuilder();
@@ -52,36 +52,48 @@ public class DistanceMatrixApiService {
                 .build();
         System.out.println(request);
         Response response = ApiClient.getClient().newCall(request).execute();
-        if (response != null && response.isSuccessful()) {
+        if (response.isSuccessful()) {
             DistanceApiResult result = Utils.fromJson(response.body().string(), DistanceApiResult.class);
-            distance = result.getRows().get(0).getElements().get(0).getDistance().getValue();
+            try {
+                distance = result.getRows().get(0).getElements().get(0).getDistance().getValue();
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
         }
         return Math.round(distance/1000.0);
     }
 
 
-    public void calculateDistances(double currentLatitude, double currentLongtitude, List<LocationEntity> locations) throws IOException, ExecutionException, InterruptedException, SQLException {
+    public void calculateDistances(double currentLatitude, double currentLongtitude, List<LocationResponse> locationResponses) throws IOException {
         boolean iscalculateDistanceSuccessfull = true;
-        for (LocationEntity locationEntity : locations) {
-            long distance = -1;
-            if (locationEntity.getLocationLatitude() == 0 || locationEntity.getLocationLongitude() == 0) {
-                geocodingApiService.getLatlong(locationEntity);
+        for (LocationResponse locationResponse : locationResponses) {
+            long distance;
+            if (locationResponse.getLocationLatitude() == 0 || locationResponse.getLocationLongitude() == 0) {
+                try {
+                    geocodingApiService.getLatlong(locationResponse);
+                }catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
             }
-            distance = calculateDistance(currentLatitude, currentLongtitude, locationEntity);
+            distance = calculateDistance(currentLatitude, currentLongtitude, locationResponse);
             if (distance == 0 || distance == -1) {
                 iscalculateDistanceSuccessfull = false;
                 break;
             }
-            locationEntity.setDistance(distance);
+            locationResponse.setDistance(distance);
         }
         if (!iscalculateDistanceSuccessfull) {
-            long distance = -1;
-            for (LocationEntity locationEntity : locations) {
-                if (locationEntity.getLocationLatitude() == 0 || locationEntity.getLocationLongitude() == 0) {
-                    geocodingApiService.getLatlong(locationEntity);
+            long distance;
+            for (LocationResponse locationResponse : locationResponses) {
+                if (locationResponse.getLocationLatitude() == 0 || locationResponse.getLocationLongitude() == 0) {
+                    try {
+                        geocodingApiService.getLatlong(locationResponse);
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                    }
                 }
-                distance =  haversineDistance(currentLatitude, currentLongtitude, locationEntity.getLocationLatitude(), locationEntity.getLocationLongitude());
-                locationEntity.setDistance(distance);
+                distance =  haversineDistance(currentLatitude, currentLongtitude, locationResponse.getLocationLatitude(), locationResponse.getLocationLongitude());
+                locationResponse.setDistance(distance);
             }
         }
     }

@@ -1,7 +1,8 @@
 package edu.hcmuaf.tourrecommendationservice.repository;
 
 import edu.hcmuaf.tourrecommendationservice.dao.WishlistDao;
-import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
+import edu.hcmuaf.tourrecommendationservice.entity.Location;
+import edu.hcmuaf.tourrecommendationservice.entity.Wishlist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +23,7 @@ public class WishlistRepository {
         return wishlistDao.deleteLocationFromWishlist(userId,locationId);
     }
 
-    public List<LocationEntity> getWishlist(long userId) throws SQLException {
+    public Wishlist getWishlist(long userId) throws SQLException {
         return wishlistDao.selectAllLocationFromWishlist(userId);
     }
 }

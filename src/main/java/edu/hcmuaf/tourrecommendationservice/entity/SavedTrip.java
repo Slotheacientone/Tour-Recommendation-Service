@@ -7,11 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Data
-@Setter
-@Getter
-public class SavedTripEntity {
-    private long userId;
+public class SavedTrip {
+    private User user;
     private long savedTripId;
-    private List<LocationEntity> savedTripLocations;
+    private List<Location> savedTripLocations;
 
 }

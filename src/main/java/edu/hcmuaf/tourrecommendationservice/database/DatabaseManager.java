@@ -1,6 +1,6 @@
 package edu.hcmuaf.tourrecommendationservice.database;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
+import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +38,7 @@ public class DatabaseManager {
      * @return data source
      */
     public DataSource getDataSource(){
-        MysqlDataSource dataSource = new MysqlDataSource();
+        MysqlConnectionPoolDataSource dataSource = new MysqlConnectionPoolDataSource();
         dataSource.setURL(dbURL);
         dataSource.setUser(userName);
         dataSource.setPassword(password);
@@ -63,8 +63,6 @@ public class DatabaseManager {
 
     /**
      * Close connection to database.
-     *
-     * @throws SQLException sql exception
      */
     public void closeConnection(){
         if(isOpen){

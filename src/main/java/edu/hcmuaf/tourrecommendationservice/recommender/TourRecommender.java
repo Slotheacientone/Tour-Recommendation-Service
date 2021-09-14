@@ -1,13 +1,14 @@
 package edu.hcmuaf.tourrecommendationservice.recommender;
 
-import edu.hcmuaf.tourrecommendationservice.entity.LocationEntity;
+import edu.hcmuaf.tourrecommendationservice.entity.Location;
+import edu.hcmuaf.tourrecommendationservice.entity.Wishlist;
 import edu.hcmuaf.tourrecommendationservice.repository.LocationRepository;
 import edu.hcmuaf.tourrecommendationservice.repository.WishlistRepository;
 import lombok.SneakyThrows;
 import org.apache.mahout.cf.taste.common.Refreshable;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.recommender.GenericItemBasedRecommender;
-import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
+import org.apache.mahout.cf.taste.impl.similarity.UncenteredCosineSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.recommender.IDRescorer;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
@@ -28,7 +29,7 @@ public class TourRecommender implements Recommender {
         this.wishlistRepository = wishlistRepository;
         this.model = model;
         this.locationRepository = locationRepository;
-        ItemSimilarity similarity = new PearsonCorrelationSimilarity(model);
+        ItemSimilarity similarity = new UncenteredCosineSimilarity(model);
         delegate = new GenericItemBasedRecommender(model, similarity);
     }
 
@@ -36,16 +37,16 @@ public class TourRecommender implements Recommender {
     @SneakyThrows
     @Override
     public List<RecommendedItem> recommend(long userId, int howMany) {
-        List<LocationEntity> locations = wishlistRepository.getWishlist(userId);
-        IDRescorer rescorer = new TourRescore(locations, locationRepository);
+        Wishlist wishlist = wishlistRepository.getWishlist(userId);
+        IDRescorer rescorer = new TourRescore(wishlist.getLocation(), locationRepository);
         return delegate.recommend(userId, howMany, rescorer);
     }
 
     @SneakyThrows
     @Override
     public List<RecommendedItem> recommend(long userId, int howMany, boolean b) {
-        List<LocationEntity> locations = wishlistRepository.getWishlist(userId);
-        IDRescorer rescorer = new TourRescore(locations, locationRepository);
+        Wishlist wishlist = wishlistRepository.getWishlist(userId);
+        IDRescorer rescorer = new TourRescore(wishlist.getLocation(), locationRepository);
         return delegate.recommend(userId, howMany, rescorer);
     }
 
@@ -62,8 +63,8 @@ public class TourRecommender implements Recommender {
     @SneakyThrows
     @Override
     public float estimatePreference(long userId, long itemId) {
-        List<LocationEntity> locations = wishlistRepository.getWishlist(userId);
-        IDRescorer rescorer = new TourRescore(locations, locationRepository);
+        Wishlist wishlist = wishlistRepository.getWishlist(userId);
+        IDRescorer rescorer = new TourRescore(wishlist.getLocation(), locationRepository);
         return (float) rescorer.rescore(itemId, delegate.estimatePreference(userId, itemId));
     }
 

@@ -19,11 +19,6 @@ public class TourRescore implements IDRescorer {
     @SneakyThrows
     @Override
     public double rescore(long itemId, double originalScore) {
-        Location location = locationRepository.getLocation(itemId);
-        boolean contains = locations.stream().anyMatch(item -> item.getCategory().contains(location.getCategory()));
-        if (contains) {
-            return originalScore * 1.2;
-        }
         return originalScore;
     }
 

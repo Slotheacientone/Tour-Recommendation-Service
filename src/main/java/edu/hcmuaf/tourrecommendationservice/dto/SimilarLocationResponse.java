@@ -4,10 +4,9 @@ import edu.hcmuaf.tourrecommendationservice.entity.Location;
 import lombok.Data;
 
 @Data
-public class WishlistItemResponse extends LocationResponse{
-    private int order;
+public class SimilarLocationResponse extends LocationResponse{
 
-    public WishlistItemResponse(Location location){
+    public SimilarLocationResponse(Location location){
         this.locationId = location.getLocationId();
         this.locationName = location.getLocationName();
         this.locationImageUrl = location.getLocationImageUrl();

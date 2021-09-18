@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 public class RecommendResponse extends LocationResponse {
 
-    private float recommendScore;
+    private int order;
 
-    public RecommendResponse(Location location, float recommendScore){
+    public RecommendResponse(Location location){
         this.locationId = location.getLocationId();
         this.locationName = location.getLocationName();
         this.locationImageUrl = location.getLocationImageUrl();
@@ -16,6 +16,5 @@ public class RecommendResponse extends LocationResponse {
         this.numberOfPeopleRating = location.getNumberOfPeopleRating();
         this.locationLatitude = location.getLocationLatitude();
         this.locationLongitude = location.getLocationLongitude();
-        this.recommendScore = recommendScore;
     }
 }

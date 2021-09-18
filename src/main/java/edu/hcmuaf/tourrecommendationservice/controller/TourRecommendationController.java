@@ -1,8 +1,6 @@
 package edu.hcmuaf.tourrecommendationservice.controller;
 
 import edu.hcmuaf.tourrecommendationservice.dto.LocationResponse;
-import edu.hcmuaf.tourrecommendationservice.dto.RecommendResponse;
-import edu.hcmuaf.tourrecommendationservice.entity.Location;
 import edu.hcmuaf.tourrecommendationservice.service.RecommendateService;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @RestController
 public class TourRecommendationController {
@@ -32,6 +29,13 @@ public class TourRecommendationController {
         } else {
             recommendation = recommendateService.recommend(userId, numberOfRecommendation);
         }
+        return new ResponseEntity<>(recommendation, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/recommend/get-similar-locations")
+    public ResponseEntity<List<LocationResponse>> getSimilarLocations(@RequestParam long locationId) throws TasteException, SQLException {
+        List<LocationResponse> recommendation;
+        recommendation = recommendateService.getMostSimilarItems(locationId);
         return new ResponseEntity<>(recommendation, HttpStatus.OK);
     }
 
